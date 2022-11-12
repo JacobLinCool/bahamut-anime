@@ -1,0 +1,44 @@
+{
+    "name": "bahamut-anime",
+    "version": "1.0.0",
+    "description": "Interact with the Bahamut Anime API in a simple and easy way.",
+    "keywords": [
+        "anime",
+        "bahamut",
+        "api",
+        "typescript"
+    ],
+    "author": "JacobLinCool <jacoblincool@gmail.com> (https://github.com/JacobLinCool)",
+    "license": "MIT",
+    "main": "lib/index.js",
+    "module": "lib/index.mjs",
+    "types": "lib/index.d.ts",
+    "files": [
+        "lib"
+    ],
+    "scripts": {
+        "test": "jest --coverage",
+        "dev": "tsup --watch",
+        "build": "tsup",
+        "docs": "typedoc src",
+        "format": "prettier --write . --ignore-path .gitignore",
+        "lint": "eslint ."
+    },
+    "devDependencies": {
+        "@types/jest": "^29.2.2",
+        "@types/node": "^18.11.9",
+        "@typescript-eslint/eslint-plugin": "^5.42.1",
+        "@typescript-eslint/parser": "^5.42.1",
+        "eslint": "^8.27.0",
+        "eslint-config-prettier": "^8.5.0",
+        "jest": "^29.3.1",
+        "prettier": "^2.7.1",
+        "ts-jest": "^29.0.3",
+        "tsup": "^6.4.0",
+        "typedoc": "^0.23.20",
+        "typescript": "^4.8.4"
+    },
+    "dependencies": {
+        "cross-fetch": "^3.1.5"
+    }
+}
