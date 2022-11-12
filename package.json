@@ -40,5 +40,13 @@
     },
     "dependencies": {
         "cross-fetch": "^3.1.5"
+    },
+    "homepage": "https://jacoblincool.github.io/bahamut-anime/",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/JacobLinCool/bahamut-anime.git"
+    },
+    "bugs": {
+        "url": "https://github.com/JacobLinCool/bahamut-anime/issues"
     }
 }
