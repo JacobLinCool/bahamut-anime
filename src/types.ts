@@ -1,5 +1,8 @@
 export type NumericString = `${number}`;
 
+/**
+ * 動畫類型
+ */
 export enum AnimeCategory {
     "所有動畫" = 0,
     "戀愛" = 1,
@@ -17,6 +20,9 @@ export enum AnimeCategory {
     "青春校園" = 13,
 }
 
+/**
+ * 動畫中對不同類型集數的分類
+ */
 export enum VolumeType {
     "本篇" = 0,
     "電影" = 1,

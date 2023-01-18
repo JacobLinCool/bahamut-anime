@@ -1,22 +1,42 @@
 import fetch from "cross-fetch";
 import type { EndpointResult, EndpointList } from "./endpoints";
 
+/**
+ * Fetcher with internal cache
+ */
 export class Fetcher {
-    private cache = new Map<string, unknown>();
+    /**
+     * Internal cache
+     */
+    private cache = new Map<string, [exp: number, data: unknown]>();
+    /**
+     * Event listeners
+     */
     public listeners = new Map<string, Set<(...args: unknown[]) => void>>();
 
+    /**
+     * @param base API base URL
+     */
     constructor(public base = "https://api.gamer.com.tw/mobile_app/anime/") {}
 
+    /**
+     * Clear cache
+     */
     prune(): void {
         this.cache.clear();
     }
 
+    /**
+     * Get parsed json data from endpoint
+     * @param endpoint Endpoint path
+     */
     async get<T extends EndpointList>(endpoint: T): Promise<EndpointResult<T>>;
     async get<T extends string>(endpoint: T): Promise<unknown>;
     async get(endpoint: string): Promise<unknown> {
-        if (this.cache.has(endpoint)) {
+        const cached = this.cache.get(endpoint);
+        if (cached && cached[0] >= Date.now()) {
             this.emit("cache-hit", endpoint);
-            return this.cache.get(endpoint);
+            return cached[1];
         }
         this.emit("cache-miss", endpoint);
 
@@ -26,11 +46,16 @@ export class Fetcher {
         this.emit("fetch-end", url);
         const json = await res.json();
         this.emit("json-parse", url, json);
-        this.cache.set(endpoint, json);
+        this.cache.set(endpoint, [Date.now() + 60_000, json]);
 
         return json;
     }
 
+    /**
+     * Add a listener for an event
+     * @param event Event name
+     * @param listener Listener function
+     */
     on(event: "cache-hit", listener: (endpoint: string) => void): void;
     on(event: "cache-miss", listener: (endpoint: string) => void): void;
     on(event: "fetch-start", listener: (url: string) => void): void;
@@ -45,6 +70,11 @@ export class Fetcher {
         this.listeners.get(event)?.add(listener);
     }
 
+    /**
+     * Remove a listener for an event
+     * @param event Event name
+     * @param listener Listener function
+     */
     off(event: "cache-hit", listener: (endpoint: string) => void): void;
     off(event: "cache-miss", listener: (endpoint: string) => void): void;
     off(event: "fetch-start", listener: (url: string) => void): void;
@@ -55,6 +85,10 @@ export class Fetcher {
         this.listeners.get(event)?.delete(listener);
     }
 
+    /**
+     * Emit an event
+     * @param event Event name
+     */
     protected emit(event: "cache-hit", endpoint: string): void;
     protected emit(event: "cache-miss", endpoint: string): void;
     protected emit(event: "fetch-start", url: string): void;
@@ -65,4 +99,7 @@ export class Fetcher {
     }
 }
 
+/**
+ * The default fetcher instance
+ */
 export const fetcher = new Fetcher();
